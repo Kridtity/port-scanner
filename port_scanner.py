@@ -2,7 +2,7 @@
 """
 SYNOPSIS
 
-    TODO helloworld [-h,--help] [-v,--verbose] [--version]
+    python port_scanner.py "destination ips delimited by commas" [-h,--help] [-v,--verbose] [-o,--open] [-c,--closed] [-f,--filtered] [-e,--error] [--version]
 
 DESCRIPTION
 
@@ -39,8 +39,11 @@ help_message = """
 TiO2 Minerals Consultants Pty Ltd.
 
 Port Scanner {version} Help:
-Run this program by running "python port_scanner.py "destination_ips" [optional_flags]" in the terminal/powershell in the containing folder.
+Run this program by running "python port_scanner.py "destination ips delimited by commas" [optional_flags]" in the terminal/powershell in the containing folder.
 Accepted IP formats are IPv4 dot notation addresses and domain names, including CIDR notation.
+
+Requirements:
+libpcap to be installed on Unix-like systems or equivalent on host system (e.g. Npcap on Windows).
 
 Flags:
 Port Scanner {version} includes several flags or switches that can be toggled for use during operation.
@@ -134,8 +137,8 @@ errors = []
 if "--version" in cmd_input:
     print("Version {version}")
 
-# Print help info if true
-if help:
+# Print help info if program is run in the presence of a debugger (i.e. not from cmd/bash), help flag is true, or mising too many arguments
+if (sys.gettrace() != None) or help or (len(cmd_input) < 2):
     print(help_message)
 
 # Proceed with scan only if IPs list is not empty
