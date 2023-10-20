@@ -6,32 +6,45 @@ TiO2 Minerals Consultants Pty Ltd.
 
 Port Scanner 0.0 Help:
 Run this program by running "python port_scanner.py "destination_ips" [optional_flags]" in the terminal/powershell in the containing folder.
+
 Accepted IP formats are IPv4 dot notation addresses and domain names, including CIDR notation.
 
 Flags:
 Port Scanner 0.0 includes several flags or switches that can be toggled for use during operation.
 
-[-h,--help]
-Displays this help screen
 
-[-v,--verbose]
+`[-h,--help]`
+Displays the help screen
+
+
+`[-v,--verbose]`
 Set program mode to verbose
 
-[--version]
+
+`[--version]`
 Print program version
 
-[-c,--closed]
+
+`[-c,--closed]`
 Output closed ports
 
-[-o,--open]
+
+`[-o,--open]`
 Output open ports
 
-[-f,--filtered]
+
+`[-f,--filtered]`
 Output filtered ports
 
-[-e,--error]
+
+`[-e,--error]`
 Output ports encountering errors
 
+
+
 Examples:
-    python port_scanner.py "127.0.0.1" -o
-    python port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version
+
+`python port_scanner.py "127.0.0.1" -o`
+
+`python port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version`
+
