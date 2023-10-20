@@ -137,9 +137,11 @@ errors = []
 if "--version" in cmd_input:
     print("Version {version}")
 
-# Print help info if program is run in the presence of a debugger (i.e. not from cmd/bash), help flag is true, or mising too many arguments
+# Print help info if program is run in the presence of a debugger (i.e. not from cmd/bash), help flag is true, or mising too many arguments then exit
 if (sys.gettrace() != None) or help or (len(cmd_input) < 2):
     print(help_message)
+    i = input()
+    sys.exit()
 
 # Proceed with scan only if IPs list is not empty
 if dips != None:
