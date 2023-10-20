@@ -158,7 +158,7 @@ if dips != None:
             print(response)
 
             # Configure outputs for port scan
-            # If open port response
+            # If port response is none or none: filtered, packet likely dropped or host down
             if (response == None) or (response == "None: Filtered"):
                 # If verbose, print real-time output
                 if verbosity == 1:
@@ -183,6 +183,7 @@ if dips != None:
                     filtered_port_results.append(
                         "Packet likely dropped by firewall/ACL/router etc."
                     )
+            # If port responds with SYN-ACK, port is open and receiving
             elif response[TCP].flags == "SA":
                 # If verbose, print real-time output
                 if verbosity == 1:
@@ -194,6 +195,7 @@ if dips != None:
                 open_port_results.append(
                     "Port {} for host {} open.".format(pac[TCP].dport, pac[IP].dst)
                 )
+            # If port responds RST or RST-ACK, host is up but port closed
             elif (response[TCP].flags == "R") or (response[TCP].flags == "RA"):
                 # If verbose, print real-time output
                 if verbosity == 1:
@@ -207,6 +209,7 @@ if dips != None:
                 closed_port_results.append(
                     "Port {} for host {} closed.".format(pac[TCP].dport, pac[IP].dst)
                 )
+            # Catch-all error default method
             else:
                 # If verbose, print real-time output
                 if verbosity == 1:
