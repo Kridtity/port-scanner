@@ -103,12 +103,12 @@ dports = [21, 22, 23, 25, 53, 80, 110, 135, 137, 138, 139, 443, 1433, 1434, 8080
 # Receive program inputs from sys CLI
 cmd_input = sys.argv
 
-# Clean IP input and set destination IPs from cmd_input
-# Rudimentary check if arg one in cmd input is a quote mark to see if command contains IPs
-if sys.argv[1] == '"':
-    dips = list(sys.argv[1].replace(" ", "").split(","))
-else:
-    dips = None
+# Check if arg with quotes in cmd input (contains IP or list of IPs) found, clean IP input, and set destination IPs
+for arg in sys.argv:
+    if arg[1] == '"':
+        dips = list(arg.replace(" ", "").split(","))
+    else:
+        dips = None
 
 # Change switch states according to cmd_input
 if ("?" or "-h" or "--help") in cmd_input:
