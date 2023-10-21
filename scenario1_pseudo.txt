@@ -1,0 +1,136 @@
+Scenario 1 Pseudocode Version 
+
+START
+    IMPORT scapy module
+    IMPORT system module
+
+    SET help to FALSE
+    SET closed_ports to FALSE
+    SET open_ports to FALSE
+    SET filtered_ports to FALSE
+    SET error_ports to FALSE
+
+    SET help_message to help message
+
+    SET version to current version number
+
+    SET cmd_input to command line inputs
+
+    SET open_port_results to empty list
+    SET closed_port_results to empty list
+    SET filtered_port_results to empty list
+    SET errors to empty list
+
+    FOR argument in cmd_input
+        IF argument is a flag
+            SET flag to TRUE
+
+    IF program is run in IDE OR not enough arguments in cmd_input OR help flag is TRUE
+        OUTPUT help_message
+        SYSTEM EXIT PROGRAM
+
+    SET dports to ports to scan
+    SET dips to IPs from cmd_input to scan
+
+    IF IP list from cmd_input != empty
+        FOR IP in IP list
+            RUN scapy port scan aginst IP list and store in scan_result
+
+            IF scan_result is none or filtered
+                APPEND port number and IP address to filtered_port_results
+            ELIF scan_result is SYN-ACK
+                APPEND port number and IP address to open_port_results
+            ELIF scan_result is RST or RST-ACK
+                APPEND port number and IP address to closed_port_results
+            ELSE
+                APPEND port number and IP address to errors
+
+    IF closed_ports is TRUE
+        FOR result in closed_ports
+            OUTPUT closed_port_results at index
+
+    IF open_ports is TRUE
+        FOR result in open_ports
+            OUTPUT open_port_results at index
+
+    IF filtered_ports is TRUE
+        FOR result in filtered_ports
+            OUTPUT filtered_port_results at index
+
+    IF error_ports is TRUE
+        FOR result in error_ports
+            OUTPUT errors at index
+
+    SYSTEM EXIT PROGRAM
+END
+
+
+Scenario 1 Pseudocode Version 2
+
+START
+    IMPORT scapy module
+    IMPORT system module
+
+    SET help to FALSE
+    SET closed_ports to FALSE
+    SET open_ports to FALSE
+    SET filtered_ports to FALSE
+    SET error_ports to FALSE
+    SET verbosity to 0
+
+    SET help_message to help message
+
+    SET version to current version number
+
+    SET cmd_input to command line inputs
+
+    SET open_port_results to empty list
+    SET closed_port_results to empty list
+    SET filtered_port_results to empty list
+    SET errors to empty list
+
+    FOR argument in cmd_input
+        IF argument is a flag
+            SET flag to TRUE
+
+    IF program is run in IDE OR not enough arguments in cmd_input OR help flag is TRUE
+        OUTPUT help_message
+        SYSTEM EXIT PROGRAM
+
+    SET dports to ports to scan
+    SET dips to IPs from cmd_input to scan
+
+    IF IP list from cmd_input != empty
+        FOR IP in IP list
+            RUN scapy port scan aginst IP list and store in scan_result
+
+            IF scan_result is none or filtered
+                APPEND port number and IP address to filtered_port_results
+            ELIF scan_result is SYN-ACK
+                APPEND port number and IP address to open_port_results
+            ELIF scan_result is RST or RST-ACK
+                APPEND port number and IP address to closed_port_results
+            ELSE
+                APPEND port number and IP address to errors
+
+            IF verbosity is 1
+                OUTPUT scan_result
+
+    IF closed_ports is TRUE
+        FOR result in closed_ports
+            OUTPUT closed_port_results at index
+
+    IF open_ports is TRUE
+        FOR result in open_ports
+            OUTPUT open_port_results at index
+
+    IF filtered_ports is TRUE
+        FOR result in filtered_ports
+            OUTPUT filtered_port_results at index
+
+    IF error_ports is TRUE
+        FOR result in error_ports
+            OUTPUT errors at index
+
+    SYSTEM EXIT PROGRAM
+END

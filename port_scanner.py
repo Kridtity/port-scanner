@@ -6,11 +6,14 @@ SYNOPSIS
 
 DESCRIPTION
 
-    TODO This describes how to use this script.
+    Run this program by running "python port_scanner.py "destination ips delimited by commas" [optional_flags]" in the terminal/powershell in the containing folder.
+    Accepted IP formats are IPv4 dot notation addresses and domain names, including CIDR notation.
 
 EXAMPLES
 
-    TODO: Show some examples of how to use this script.
+    Examples:
+    python port_scanner.py "127.0.0.1" -o
+    python port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version
 
 AUTHOR
 
@@ -148,7 +151,7 @@ if dips != None:
     # Print scanning notification to console
     print("Scanning...")
 
-    # Disable scapy outputs
+    # Disable scapy outputs if verbosity is off
     if verbosity == 0:
         # Save object sys.stdout to variable as backup
         old_stdout = sys.stdout
@@ -255,3 +258,7 @@ if error_ports:
     for error in errors:
         print(result)
     print()
+
+# Set wait for input method before exiting so user has time to see output before closing program
+i = input()
+sys.exit()
