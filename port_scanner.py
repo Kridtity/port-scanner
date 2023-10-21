@@ -28,14 +28,14 @@ LICENSE
 
 VERSION
 
-    0.0
+    1.0
 """
 # Import modules to be used: sys and scapy
 from scapy.all import *
 import sys
 
 # Program version
-version = 0.0
+version = 1.0
 
 # Set help message
 help_message = """

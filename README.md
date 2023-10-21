@@ -6,7 +6,7 @@ Simple port scanner built using the Python scapy module as part of a TAFE assess
 
 TiO2 Minerals Consultants Pty Ltd.
 
-## Port Scanner 0.0 Help:
+## Port Scanner 1.0 Help:
 
 Run this program by running "python port_scanner.py "destination_ips" [optional_flags]" in the terminal/powershell in the containing folder.
 
@@ -18,7 +18,7 @@ libpcap to be installed on Unix-like systems or equivalent on host system (e.g. 
 
 ## Flags:
 
-Port Scanner 0.0 includes several flags or switches that can be toggled for use during operation.
+Port Scanner 1.0 includes several flags or switches that can be toggled for use during operation.
 
 `[-h,--help]`
 Displays the help screen
