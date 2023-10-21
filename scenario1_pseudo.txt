@@ -66,6 +66,7 @@ END
 
 
 Scenario 1 Pseudocode Version 2
+Note: Version 1 did not include a functioning verboity switch
 
 START
     IMPORT scapy module
