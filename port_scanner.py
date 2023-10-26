@@ -41,7 +41,7 @@ version = 1.0
 help_message = """
 TiO2 Minerals Consultants Pty Ltd.
 
-Port Scanner {version} Help:
+Port Scanner {} Help:
 Run this program by running "python port_scanner.py "destination ips delimited by commas" [optional_flags]" in the terminal/powershell in the containing folder.
 Accepted IP formats are IPv4 dot notation addresses and domain names, including CIDR notation.
 
@@ -51,7 +51,7 @@ Run as sudo on linux and recommended to have admin access on Windows.
 Note: if running python doesn't work try running as python3.
 
 Flags:
-Port Scanner {version} includes several flags or switches that can be toggled for use during operation.
+Port Scanner {} includes several flags or switches that can be toggled for use during operation.
 
 [-h,--help]
 Displays this help screen
@@ -77,10 +77,10 @@ Output ports encountering errors
 Examples:
     python port_scanner.py "127.0.0.1" -o (Windows)
     sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)
-"""
+""".format(version, version)
 
 # Define initial states of switches
-help = False
+help_switch = False
 closed_ports = False
 open_ports = False
 filtered_ports = False
@@ -109,6 +109,32 @@ port_names = {
 
 # Receive program inputs from sys CLI
 cmd_input = sys.argv
+print(cmd_input)
+
+# Change switch states according to cmd_input
+if "-h" in cmd_input or "--help" in cmd_input:
+    help_switch = True
+    print(help_switch)
+if "-v" in cmd_input or "--verbose" in cmd_input:
+    verbosity = 1
+if "-c" in cmd_input or "--closed" in cmd_input:
+    closed_ports = True
+if "-o" in cmd_input or "--open" in cmd_input:
+    open_ports = True
+if "-f" in cmd_input or "--filtered" in cmd_input:
+    filtered_ports = True
+if "-e" in cmd_input or "--error" in cmd_input:
+    error_ports = True
+
+# Print program version if true
+if "--version" in cmd_input:
+    print("Version {}".format(version))
+
+# Print help info if program is run in the presence of a debugger (i.e. not from cmd/bash), help flag is true, or mising too many arguments then exit
+if help_switch or (sys.gettrace() != None) or (len(cmd_input) < 2):
+    print(help_message)
+    i = input("Press any key to exit")
+    sys.exit()
 
 """ Check if arg with quotes in cmd input (contains IP or list of IPs) found, clean IP input, and set destination IPs """
 # Above method broke for an unknown reason, but it seems CMD, Bash etc. automatically strip quotes. Idk how I made that work before. Thus, the new method:
@@ -119,35 +145,11 @@ if "." in str(sys.argv[1]):
 else:
     dips = None
 
-# Change switch states according to cmd_input
-if ("?" or "-h" or "--help") in cmd_input:
-    help = True
-if ("-v" or "--verbose") in cmd_input:
-    verbosity = 1
-if ("-c" or "--closed") in cmd_input:
-    closed_ports = True
-if ("-o" or "--open") in cmd_input:
-    open_ports = True
-if ("-f" or "--filtered") in cmd_input:
-    filtered_ports = True
-if ("-e" or "--errors") in cmd_input:
-    error_ports = True
-
 # Define empty list to hold scan results
 open_port_results = []
 closed_port_results = []
 filtered_port_results = []
 errors = []
-
-# Print program version if true
-if "--version" in cmd_input:
-    print("Version {version}")
-
-# Print help info if program is run in the presence of a debugger (i.e. not from cmd/bash), help flag is true, or mising too many arguments then exit
-if (sys.gettrace() != None) or help or (len(cmd_input) < 2):
-    print(help_message)
-    i = input()
-    sys.exit()
 
 # Proceed with scan only if IPs list is not empty
 if dips != None:
@@ -266,8 +268,6 @@ if error_ports:
         print(result)
     print()
 
-print("\nScan finished.")
-
 # Set wait for input method before exiting so user has time to see output before closing program
-i = input()
+i = input("Press any key to exit")
 sys.exit()
