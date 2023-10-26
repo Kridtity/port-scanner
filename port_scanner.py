@@ -142,9 +142,9 @@ try:
     if "." in str(sys.argv[1]):
         dips = list(sys.argv[1].replace(" ", "").split(","))
     else:
-        dips = None
-except:
-    print("Host addresses not found, quitting...")
+        raise Exception("Host addresses not found, quitting...")
+except Exception as e:
+    print(e)
     i = input("Press any key to exit")
     sys.exit()
     
