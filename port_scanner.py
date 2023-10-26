@@ -87,34 +87,35 @@ verbosity = 0
 
 # Set destination ports to be scanned and associated port names
 dports = [21, 22, 23, 25, 53, 80, 110, 135, 137, 138, 139, 443, 1433, 1434, 8080]
-# Port names currently unused
-"""port_names = [
-    "FTP",
-    "SSH",
-    "Telnet",
-    "SMTP",
-    "DNS",
-    "HTTP",
-    "POP3",
-    "Windows RPC",
-    "Windows NetBIOS over TCP",
-    "Windows NetBIOS over TCP",
-    "Windows NetBIOS over TCP",
-    "HTTPS",
-    "Microsoft SQL Server",
-    "Microsoft SQL Server",
-    "HTTP Alternative",
-]"""
+port_names = {
+    21: "FTP",
+    22: "SSH",
+    23: "Telnet",
+    25: "SMTP",
+    53: "DNS",
+    80: "HTTP",
+    110: "POP3",
+    135: "Windows RPC",
+    137: "Windows NetBIOS over TCP",
+    138: "Windows NetBIOS over TCP",
+    139: "Windows NetBIOS over TCP",
+    443: "HTTPS",
+    1433: "Microsoft SQL Server",
+    1434: "Microsoft SQL Server",
+    8080: "HTTP Alternative",
+}
 
 # Receive program inputs from sys CLI
 cmd_input = sys.argv
 
-# Check if arg with quotes in cmd input (contains IP or list of IPs) found, clean IP input, and set destination IPs
-for arg in sys.argv:
-    if arg[1] == '"':
-        dips = list(arg.replace(" ", "").split(","))
-    else:
-        dips = None
+""" Check if arg with quotes in cmd input (contains IP or list of IPs) found, clean IP input, and set destination IPs """
+# Above method broke for an unknown reason, but it seems CMD, Bash etc. automatically strip quotes. Idk how I made that work before. Thus, the new method:
+# If the second argument of argv contains a dot (".") it shall be considered a host target (domain names and IPv4 addresses contain dots)
+# Not the cleanest method but it's the one that works for now
+if "." in str(sys.argv[1]):
+    dips = list(sys.argv[1].replace(" ", "").split(","))
+else:
+    dips = None
 
 # Change switch states according to cmd_input
 if ("?" or "-h" or "--help") in cmd_input:
@@ -168,13 +169,14 @@ if dips != None:
             # Configure outputs for port scan
             # If port response is none or none: filtered, packet likely dropped or host down
             if (response == None) or (response == "None: Filtered"):
-                # If verbose, print real-time output
+                # If verbose, print real-time output and additional port outputs
                 if verbosity == 1:
                     print(
                         "Port {} for host {} filtered.".format(
                             pac[TCP].dport, pac[IP].dst
                         )
                     )
+                    filtered_port_results.append(port_names[pac[TCP].dport])
 
                 # Append port filtered results to filtered_port_results
                 filtered_port_results.append(
@@ -183,7 +185,7 @@ if dips != None:
 
                 # Check if firewall/ACL/router block etc.
                 if pac.haslayer(ICMP):
-                    # If verbose, print real-time output
+                # If verbose, print real-time output and additional port outputs
                     if verbosity == 1:
                         print("Packet likely dropped by firewall/ACL/router etc.")
 
@@ -193,11 +195,12 @@ if dips != None:
                     )
             # If port responds with SYN-ACK, port is open and receiving
             elif response[TCP].flags == "SA":
-                # If verbose, print real-time output
+                # If verbose, print real-time output and additional port outputs
                 if verbosity == 1:
                     print(
                         "Port {} for host {} open.".format(pac[TCP].dport, pac[IP].dst)
                     )
+                    open_port_results.append(port_names[pac[TCP].dport])
 
                 # Append port open results to open_port_results
                 open_port_results.append(
@@ -205,13 +208,14 @@ if dips != None:
                 )
             # If port responds RST or RST-ACK, host is up but port closed
             elif (response[TCP].flags == "R") or (response[TCP].flags == "RA"):
-                # If verbose, print real-time output
+                # If verbose, print real-time output and additional port outputs
                 if verbosity == 1:
                     print(
                         "Port {} for host {} closed.".format(
                             pac[TCP].dport, pac[IP].dst
                         )
                     )
+                    closed_port_results.append(port_names[pac[TCP].dport])
 
                 # Append port closed results to closed_port_results
                 closed_port_results.append(
@@ -226,6 +230,7 @@ if dips != None:
                             pac[TCP].dport, pac[IP].dst
                         )
                     )
+                    error_ports.append(port_names[pac[TCP].dport])
 
                 # Append error to errors
                 errors.append(
@@ -258,6 +263,8 @@ if error_ports:
     for error in errors:
         print(result)
     print()
+
+print("\nScan finished.")
 
 # Set wait for input method before exiting so user has time to see output before closing program
 i = input()
