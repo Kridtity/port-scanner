@@ -46,6 +46,7 @@ Run this program by running "python port_scanner.py "destination ips delimited b
 Accepted IP formats are IPv4 dot notation addresses and domain names, including CIDR notation.
 
 Requirements:
+Python3 and scapy to be installed on all systems.
 libpcap to be installed on Unix-like systems or equivalent on host system (e.g. Npcap on Windows).
 Run as sudo on linux and recommended to have admin access on Windows.
 Note: if running python doesn't work try running as python3.
