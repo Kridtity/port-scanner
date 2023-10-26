@@ -138,11 +138,16 @@ if help_switch or (sys.gettrace() != None) or (len(cmd_input) < 2):
 # Above method broke for an unknown reason, but it seems CMD, Bash etc. automatically strip quotes. Idk how I made that work before. Thus, the new method:
 # If the second argument of argv contains a dot (".") it shall be considered a host target (domain names and IPv4 addresses contain dots)
 # Not the cleanest method but it's the one that works for now
-if "." in str(sys.argv[1]):
-    dips = list(sys.argv[1].replace(" ", "").split(","))
-else:
-    dips = None
-
+try:
+    if "." in str(sys.argv[1]):
+        dips = list(sys.argv[1].replace(" ", "").split(","))
+    else:
+        dips = None
+except:
+    print("Host addresses not found, quitting...")
+    i = input("Press any key to exit")
+    sys.exit()
+    
 # Define empty list to hold scan results
 open_port_results = []
 closed_port_results = []
