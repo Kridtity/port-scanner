@@ -109,12 +109,10 @@ port_names = {
 
 # Receive program inputs from sys CLI
 cmd_input = sys.argv
-print(cmd_input)
 
 # Change switch states according to cmd_input
 if "-h" in cmd_input or "--help" in cmd_input:
     help_switch = True
-    print(help_switch)
 if "-v" in cmd_input or "--verbose" in cmd_input:
     verbosity = 1
 if "-c" in cmd_input or "--closed" in cmd_input:
