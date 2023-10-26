@@ -47,6 +47,8 @@ Accepted IP formats are IPv4 dot notation addresses and domain names, including 
 
 Requirements:
 libpcap to be installed on Unix-like systems or equivalent on host system (e.g. Npcap on Windows).
+Run as sudo on linux and recommended to have admin access on Windows.
+Note: if running python doesn't work try running as python3.
 
 Flags:
 Port Scanner {version} includes several flags or switches that can be toggled for use during operation.
@@ -73,8 +75,8 @@ Output filtered ports
 Output ports encountering errors
 
 Examples:
-    python port_scanner.py "127.0.0.1" -o
-    python port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version
+    python port_scanner.py "127.0.0.1" -o (Windows)
+    sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)
 """
 
 # Define initial states of switches
