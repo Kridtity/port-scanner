@@ -12,8 +12,8 @@ DESCRIPTION
 EXAMPLES
 
     Examples:
-    python port_scanner.py "127.0.0.1" -o
-    python port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version
+    python port_scanner.py "127.0.0.1" -o (Windows)
+    sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)
 
 AUTHOR
 
@@ -77,7 +77,9 @@ Output ports encountering errors
 Examples:
     python port_scanner.py "127.0.0.1" -o (Windows)
     sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)
-""".format(version, version)
+""".format(
+    version, version
+)
 
 # Define initial states of switches
 help_switch = False
@@ -147,7 +149,7 @@ except Exception as e:
     print(e)
     i = input("Press any key to exit")
     sys.exit()
-    
+
 # Define empty list to hold scan results
 open_port_results = []
 closed_port_results = []
@@ -192,7 +194,7 @@ if dips != None:
 
                 # Check if firewall/ACL/router block etc.
                 if pac.haslayer(ICMP):
-                # If verbose, print real-time output and additional port outputs
+                    # If verbose, print real-time output and additional port outputs
                     if verbosity == 1:
                         print("Packet likely dropped by firewall/ACL/router etc.")
 

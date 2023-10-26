@@ -45,6 +45,6 @@ Output ports encountering errors
 
 Examples:
 
-`python port_scanner.py "127.0.0.1" -o`
+`python port_scanner.py "127.0.0.1" -o (Windows)`
 
-`python port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version`
+`sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)`
