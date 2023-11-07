@@ -63,21 +63,9 @@ Set program mode to verbose
 [--version]
 Print program version
 
-[-c,--closed]
-Output closed ports
-
-[-o,--open]
-Output open ports
-
-[-f,--filtered]
-Output filtered ports
-
-[-e,--error]
-Output ports encountering errors
-
 Examples:
-    python port_scanner.py "127.0.0.1" -o (Windows)
-    sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)
+    python port_scanner.py "127.0.0.1" (Windows)
+    sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v --version (Linux)
 """.format(
     version, version
 )
@@ -118,14 +106,6 @@ if "-h" in cmd_input or "--help" in cmd_input:
     help_switch = True
 if "-v" in cmd_input or "--verbose" in cmd_input:
     verbosity = 1
-if "-c" in cmd_input or "--closed" in cmd_input:
-    closed_ports = True
-if "-o" in cmd_input or "--open" in cmd_input:
-    open_ports = True
-if "-f" in cmd_input or "--filtered" in cmd_input:
-    filtered_ports = True
-if "-e" in cmd_input or "--error" in cmd_input:
-    error_ports = True
 
 # Print program version if true
 if "--version" in cmd_input:
@@ -151,11 +131,21 @@ except Exception as e:
     i = input("Press any key to exit")
     sys.exit()
 
+# Find IPs with subnet masks and expand them into IP ranges
+new_dips = []
+
+for ip in dips:
+    if "/" in ip:
+        network_ips = Net(ip)
+        for net_ip in network_ips:
+            new_dips.append(net_ip)
+    else:
+        new_dips.append(ip)
+
+dips = new_dips
+
 # Define empty list to hold scan results
-open_port_results = []
-closed_port_results = []
-filtered_port_results = []
-errors = []
+results = []
 
 # Proceed with scan only if IPs list is not empty
 if dips != None:
@@ -171,10 +161,12 @@ if dips != None:
 
     # Run port scan
     for ip in dips:
+        # Append current IP address to use as header later
+        results.append(ip)
+
         for port in dports:
             pac = IP(dst=ip) / TCP(sport=RandShort(), dport=port, flags="S")
             response = sr1(pac, timeout=1.0, retry=1, verbose=verbosity)
-            print(response)
 
             # Configure outputs for port scan
             # If port response is none or none: filtered, packet likely dropped or host down
@@ -186,10 +178,10 @@ if dips != None:
                             pac[TCP].dport, pac[IP].dst
                         )
                     )
-                    filtered_port_results.append(port_names[pac[TCP].dport])
+                    results.append(port_names[pac[TCP].dport])
 
-                # Append port filtered results to filtered_port_results
-                filtered_port_results.append(
+                # Append port filtered results to results
+                results.append(
                     "Port {} for host {} filtered.".format(pac[TCP].dport, pac[IP].dst)
                 )
 
@@ -199,8 +191,8 @@ if dips != None:
                     if verbosity == 1:
                         print("Packet likely dropped by firewall/ACL/router etc.")
 
-                    # Append notice into filtered_port_results
-                    filtered_port_results.append(
+                    # Append notice into results
+                    results.append(
                         "Packet likely dropped by firewall/ACL/router etc."
                     )
             # If port responds with SYN-ACK, port is open and receiving
@@ -210,10 +202,10 @@ if dips != None:
                     print(
                         "Port {} for host {} open.".format(pac[TCP].dport, pac[IP].dst)
                     )
-                    open_port_results.append(port_names[pac[TCP].dport])
+                    results.append(port_names[pac[TCP].dport])
 
-                # Append port open results to open_port_results
-                open_port_results.append(
+                # Append port open results to results
+                results.append(
                     "Port {} for host {} open.".format(pac[TCP].dport, pac[IP].dst)
                 )
             # If port responds RST or RST-ACK, host is up but port closed
@@ -225,10 +217,10 @@ if dips != None:
                             pac[TCP].dport, pac[IP].dst
                         )
                     )
-                    closed_port_results.append(port_names[pac[TCP].dport])
+                    results.append(port_names[pac[TCP].dport])
 
-                # Append port closed results to closed_port_results
-                closed_port_results.append(
+                # Append port closed results to results
+                results.append(
                     "Port {} for host {} closed.".format(pac[TCP].dport, pac[IP].dst)
                 )
             # Catch-all error default method
@@ -242,37 +234,24 @@ if dips != None:
                     )
                     error_ports.append(port_names[pac[TCP].dport])
 
-                # Append error to errors
-                errors.append(
+                # Append error to results
+                results.append(
                     "Encountered error for port {} for host {}.".format(
                         pac[TCP].dport, pac[IP].dst
                     )
                 )
+
+        # Add line break to list
+        results.append("")
+
 
     # Restore sys.stdout for our own outputs
     if (verbosity == 0) and (sys.stdout != old_stdout):
         sys.stdout = old_stdout
 
 # Print scan results
-if closed_ports:
-    for result in closed_port_results:
-        print(result)
-    print()
-
-if open_ports:
-    for result in open_port_results:
-        print(result)
-    print()
-
-if filtered_ports:
-    for result in filtered_port_results:
-        print(result)
-    print()
-
-if error_ports:
-    for error in errors:
-        print(result)
-    print()
+for result in results:
+    print(result)
 
 # Set wait for input method before exiting so user has time to see output before closing program
 i = input("Press any key to exit")
