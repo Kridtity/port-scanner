@@ -164,7 +164,6 @@ for ip in dips:
 
 dips = new_dips
 
-
 # Define empty list to hold scan results
 open_port_results = []
 closed_port_results = []
