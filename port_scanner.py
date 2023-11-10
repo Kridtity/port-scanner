@@ -151,6 +151,20 @@ except Exception as e:
     i = input("Press any key to exit")
     sys.exit()
 
+# Find IPs with subnet masks and expand them into IP ranges
+new_dips = []
+
+for ip in dips:
+    if "/" in ip:
+        network_ips = Net(ip)
+        for net_ip in network_ips:
+            new_dips.append(net_ip)
+    else:
+        new_dips.append(ip)
+
+dips = new_dips
+
+
 # Define empty list to hold scan results
 open_port_results = []
 closed_port_results = []
