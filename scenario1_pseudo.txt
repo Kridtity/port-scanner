@@ -135,3 +135,72 @@ START
 
     SYSTEM EXIT PROGRAM
 END
+
+
+Scenario 1 Pseudocode Version 3
+Note: Previous versions did not meet the requirements of the scenario
+
+START
+    IMPORT scapy module
+    IMPORT system module
+
+    SET help to FALSE
+
+    SET help_message to help message
+
+    SET version to current version number
+
+    SET cmd_input to command line inputs
+
+    SET results to empty list
+
+    FOR argument in cmd_input
+        IF argument is a flag
+            SET flag to TRUE
+
+    IF program is run in IDE OR not enough arguments in cmd_input OR help flag is TRUE
+        OUTPUT help_message
+        SYSTEM EXIT PROGRAM
+
+    #dports = destination ports, dips = destination IPs
+    SET dports to ports to scan
+    SET dips to IPs from cmd_input to scan
+
+    SET new_dips to empty list
+    FOR IP in dips
+        IF IP contains a slash
+            SET network_ips to the result of calling Scapy Net function on the IP to turn CIDR address into a list of IPs
+            
+            FOR net_ip in network_ips
+                APPEND net_ip to new_dips
+            ELSE
+                APPEND IP to new_dips
+
+    #Overwrite old destination IPs list with new IPs list
+    SET dips to new_dips
+
+    FOR IP in dips
+        APPEND IP to results list
+
+        FOR port in dports
+            RUN scapy port scan aginst IP list and store in scan_result
+
+            IF scan_result is none or filtered
+                APPEND filteres message along with port number and IP address results list
+            ELIF scan_result is SYN-ACK
+                APPEND open message along with port number and IP address results list
+            ELIF scan_result is RST or RST-ACK
+                APPEND closed message along with port number and IP address results list
+            ELSE
+                APPEND error message along with port number and IP address results list
+
+            IF verbosity is 1
+                OUTPUT scan_result
+
+        APPEND line break (i.e. empty character) to results list (separates reusults per IP)
+
+    FOR result in results list
+        OUTPUT result
+
+    SYSTEM EXIT PROGRAM
+END

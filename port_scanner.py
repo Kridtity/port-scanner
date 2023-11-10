@@ -2,7 +2,7 @@
 """
 SYNOPSIS
 
-    python port_scanner.py "destination ips delimited by commas" [-h,--help] [-v,--verbose] [-o,--open] [-c,--closed] [-f,--filtered] [-e,--error] [--version]
+    python port_scanner.py "destination ips delimited by commas" [-h,--help] [-v,--verbose] [--version]
 
 DESCRIPTION
 
@@ -12,8 +12,8 @@ DESCRIPTION
 EXAMPLES
 
     Examples:
-    python port_scanner.py "127.0.0.1" -o (Windows)
-    sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v -o -f --version (Linux)
+    python port_scanner.py "127.0.0.1" (Windows)
+    sudo python3 port_scanner.py "www.google.com/30, 1.1.1.1/24" -v --version (Linux)
 
 AUTHOR
 
@@ -28,14 +28,14 @@ LICENSE
 
 VERSION
 
-    1.0
+    2.0
 """
 # Import modules to be used: sys and scapy
 from scapy.all import *
 import sys
 
 # Program version
-version = 1.0
+version = 2.0
 
 # Set help message
 help_message = """
@@ -72,10 +72,6 @@ Examples:
 
 # Define initial states of switches
 help_switch = False
-closed_ports = False
-open_ports = False
-filtered_ports = False
-error_ports = False
 verbosity = 0
 
 # Set destination ports to be scanned and associated port names
@@ -117,6 +113,9 @@ if help_switch or (sys.gettrace() != None) or (len(cmd_input) < 2):
     i = input("Press any key to exit")
     sys.exit()
 
+# Define empty list to hold scan results
+results = []
+
 """ Check if arg with quotes in cmd input (contains IP or list of IPs) found, clean IP input, and set destination IPs """
 # Above method broke for an unknown reason, but it seems CMD, Bash etc. automatically strip quotes. Idk how I made that work before. Thus, the new method:
 # If the second argument of argv contains a dot (".") it shall be considered a host target (domain names and IPv4 addresses contain dots)
@@ -143,9 +142,6 @@ for ip in dips:
         new_dips.append(ip)
 
 dips = new_dips
-
-# Define empty list to hold scan results
-results = []
 
 # Proceed with scan only if IPs list is not empty
 if dips != None:
