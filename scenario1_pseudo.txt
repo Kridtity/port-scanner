@@ -179,25 +179,26 @@ START
     #Overwrite old destination IPs list with new IPs list
     SET dips to new_dips
 
-    FOR IP in dips
-        APPEND IP to results list
+    IF IP list from cmd_input != empty
+        FOR IP in dips
+            APPEND IP to results list
 
-        FOR port in dports
-            RUN scapy port scan aginst IP list and store in scan_result
+            FOR port in dports
+                RUN scapy port scan aginst IP list and store in scan_result
 
-            IF scan_result is none or filtered
-                APPEND filteres message along with port number and IP address results list
-            ELIF scan_result is SYN-ACK
-                APPEND open message along with port number and IP address results list
-            ELIF scan_result is RST or RST-ACK
-                APPEND closed message along with port number and IP address results list
-            ELSE
-                APPEND error message along with port number and IP address results list
+                IF scan_result is none or filtered
+                    APPEND filteres message along with port number and IP address results list
+                ELIF scan_result is SYN-ACK
+                    APPEND open message along with port number and IP address results list
+                ELIF scan_result is RST or RST-ACK
+                    APPEND closed message along with port number and IP address results list
+                ELSE
+                    APPEND error message along with port number and IP address results list
 
-            IF verbosity is 1
-                OUTPUT scan_result
+                IF verbosity is 1
+                    OUTPUT scan_result
 
-        APPEND line break (i.e. empty character) to results list (separates reusults per IP)
+            APPEND line break (i.e. empty character) to results list (separates reusults per IP)
 
     FOR result in results list
         OUTPUT result
